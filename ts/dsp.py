@@ -4,11 +4,11 @@ import numpy as np
 
 
 def make_sinusoidal_signal(
-    mean: float=0, 
-    amp: float=1.0, 
-    freq: int=1, 
+    mean: float=0,
+    amp: float=1.0,
+    freq: int=1,
     points: int=100,
-    noise_mean: float=0.0, 
+    noise_mean: float=0.0,
     noise_var: float=0.1):
     """
     Generate a synthetic signal.
@@ -23,5 +23,5 @@ def make_sinusoidal_signal(
     one_cycle = amp * np.sin(np.linspace(0, 2*np.pi, num=points))
     full_signal = np.tile(one_cycle, freq) + mean
     total_length = points * freq
-    noise = np.random.normal(noise_mean, sig_var, size=total_length)
+    noise = np.random.normal(noise_mean, noise_var, size=total_length)
     return full_signal + noise
