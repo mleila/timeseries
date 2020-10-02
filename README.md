@@ -28,7 +28,7 @@ These notebooks provide a high-level overview of some of the useful ideas for ti
 - Spark and Pandas Time Series Pipelines
 - Dealing with Missing Data
 
-## Popular Time Series Python Libraries
+## Popular Time Series Python Libraries
 
 - Facebook's Prophet
 - Statsmodels
