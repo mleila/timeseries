@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import pandas as pd
+from pyspark.sql import SparkSession
 
 
 BASE = Path('../../data/')
@@ -34,10 +35,10 @@ def load_globaltemp(
     if frmt not in avail_frmts:
         raise NameError(f'{frmt} is not availble, only f{avail_frmts} are allowed')
 
-    url_base = Path('https://raw.githubusercontent.com/datasets/global-temp/master/')
-    url = url_base / 'data/annual.csv'
+    url_base = 'https://raw.githubusercontent.com/datasets/global-temp/master'
+    url = url_base + '/data/annual.csv'
     if mode == 'monthly':
-        url = url_base / 'data/monthly.csv'
+        url = url_base + '/data/monthly.csv'
 
     if frmt == 'pandas':
         return pd.read_csv(url)
@@ -91,6 +92,9 @@ def load_motionsense(
     if frmt == 'pandas':
         return pd.read_csv(path)
 
+    spark = SparkSession.builder.getOrCreate()
+    return spark.read.format('csv').option("header", "true").load(str(path))
+
 
 def load_trumptweets(frmt: str='pandas'):
     '''
@@ -107,3 +111,6 @@ def load_trumptweets(frmt: str='pandas'):
     path = BASE / Path('trumptweets/realdonaldtrump.csv')
     if frmt == 'pandas':
         return pd.read_csv(path)
+
+    spark = SparkSession.builder.getOrCreate()
+    return spark.read.format('csv').option("header", "true").load(str(path))
