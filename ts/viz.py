@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
+from pkg_resources import resource_filename
 from typing import Union, Optional
 
 import numpy as np
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+
+
+MPL_STYLE = 'https://gist.githubusercontent.com/mleila/2030f50322fc87764693c8e3501d5348/raw/ce54a5035178d9f2b65524a29c7b90b930d209a0/mleila.mplstyle'
+
+def set_mpl_style():
+    """
+    Sets Matplotlib style.
+    """
+    plt.style.use(MPL_STYLE)
 
 
 def plot_basic_timeseries(
