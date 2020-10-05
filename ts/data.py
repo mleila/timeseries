@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 '''This module provides functions to load common time series datastes.'''
 from pathlib import Path
+from pkg_resources import resource_filename
 
 import pandas as pd
 from pyspark.sql import SparkSession
@@ -9,7 +10,33 @@ from pyspark.sql import SparkSession
 BASE = Path('../../data/')
 
 
-# real world datasets
+def load_sunspots(frmt: str='pandas'):
+    '''
+    Load sunspots data from Kaggle
+
+    Arguments:
+    - frmt: returned data structure (pandas or spark dataframes)
+    - mode: annual or monthly
+
+    Return:
+    - Pandas or Spark dataframe
+
+    Source: Database from SIDC - Solar Influences Data Analysis Center - the solar physics research department of the Royal Observatory of Belgium. SIDC website
+    '''
+    avail_frmts = ['pandas', 'spark']
+    if frmt not in avail_frmts:
+        raise NameError(f'{frmt} is not availble, only f{avail_frmts} are allowed')
+
+    path = resource_filename('data', 'sunspots/Sunspots.csv')
+
+    if frmt == 'pandas':
+        return pd.read_csv(path)
+
+    spark = SparkSession.builder.getOrCreate()
+    return spark.read.format('csv').option("header", "true").load(path)
+
+
+
 def load_globaltemp(
     frmt: str='pandas',
     mode: str='annual'
@@ -114,3 +141,24 @@ def load_trumptweets(frmt: str='pandas'):
 
     spark = SparkSession.builder.getOrCreate()
     return spark.read.format('csv').option("header", "true").load(str(path))
+
+
+def load_store_sales(frmt: str='pandas'):
+    '''
+    Load a dataset of weekly sales and price data for 9 stores and 3 products
+
+    Arguments:
+    - frmt: returned data structure (pandas or spark dataframes)
+
+    Return:
+    - Path, Pandas dataframe or Spark dataframe
+
+    Source: https://towardsdatascience.com/sales-forecasting-with-price-promotion-effects-b5d70207b128
+    '''
+    url = 'https://raw.githubusercontent.com/susanli2016/Machine-Learning-with-Python/master/data/Sales_Product_Price_by_Store.csv'
+
+    if frmt == 'pandas':
+        return pd.read_csv(url)
+
+    spark = SparkSession.builder.getOrCreate()
+    return spark.read.format('csv').option("header", "true").load(url)
