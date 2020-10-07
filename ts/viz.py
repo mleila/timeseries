@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 
 MPL_STYLE = 'https://gist.githubusercontent.com/mleila/2030f50322fc87764693c8e3501d5348/raw/ce54a5035178d9f2b65524a29c7b90b930d209a0/mleila.mplstyle'
@@ -39,3 +40,22 @@ def plot_basic_timeseries(
     fig.add_trace(scatter)
     fig.update_layout(title=title)
     return fig
+
+
+def plot_train_test(data, indices, names):
+    fig = go.Figure()
+    for ts, index, name in zip(data, indices, names):
+        scatter = go.Scatter(x=index, y=ts, mode='lines', name=name)
+        fig.add_trace(scatter)
+    return fig
+
+
+def plot_acf_pacf(data):
+    """
+    Plot the ACF and PACF plots side by side. Uses the statsmodels plotting functions.
+    """
+    fig, axs = plt.subplots(1, 2)
+    ax1, ax2 = axs
+
+    plot_acf(data, ax=ax1)
+    plot_pacf(data, ax=ax2)
