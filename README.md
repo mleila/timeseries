@@ -30,5 +30,6 @@ These notebooks provide a high-level overview of some of the useful ideas for ti
 
 ## Popular Time Series Python Libraries
 
-- Facebook's Prophet
+- Facebook's Prophet [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1fzpVNidbbosWzGIqc5YPxd8BdSuykBNo?usp=sharing)
+
 - [Statsmodels](https://github.com/mleila/timeseries/blob/master/notebooks/03_Libraries/01_statsmodels.ipynb)
