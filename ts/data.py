@@ -73,36 +73,26 @@ def load_globaltemp(
 
 def load_motionsense(
     frmt: str='pandas',
-    device: str=None,
+    activity_trial: str=None,
     subject: int=None,
     subjects_info: bool=False
     ):
     '''
     Loads subsets of the Motionsense dataset. You can either load the subject information datset, which
-    provides metadata about the subjects, or the data for a particular device and subject pair. Here is a
-    list of devices:
+    provides metadata about the subjects, or the data for a particular activity and subject pair.
 
-    - dws_1
-    - dws_2
-    - dws_11
-    - jog_9
-    - jog_16
-    _ sit_5
-    _ sit_13
-    - std_6
-    - std_14
-    - ups_3
-    - ups_4
-    - ups_12
-    _ wlk_7
-    - wlk_8
-    - wlk_15
+    There are 24 subject and 6 different labels abbreviated as follows
 
-    There are 24 subject.
+    dws: downstairs
+    ups: upstairs
+    sit: sitting
+    std: standing
+    wlk: walking
+    jog: jogging
 
     Arguments:
     - frmt: returned data structure (pandas or spark dataframes)
-    - device: device name from the above list
+    - activity_trial: activity and trial number e.g. (ups_4)
     - subject: subject id (1 to 24)
     - subjects_info: Boolean, if true, it will load subjects metadata and ignore the device and subject arguments
 
@@ -113,8 +103,8 @@ def load_motionsense(
     if subjects_info:
         path = BASE / Path('Motionsense/data_subjects_info.csv')
         return pd.read_csv(path)
-    if device and subject:
-        path = BASE / Path(f'Motionsense/{device}/sub_{subject}.csv')
+    if activity_trial and subject:
+        path = BASE / Path(f'Motionsense/{activity_trial}/sub_{subject}.csv')
 
     if frmt == 'pandas':
         return pd.read_csv(path)
