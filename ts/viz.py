@@ -59,3 +59,87 @@ def plot_acf_pacf(data):
 
     plot_acf(data, ax=ax1)
     plot_pacf(data, ax=ax2)
+
+
+def plot_gp_priors(gp, X, y, nb_samples=10):
+    '''
+    Plot Gaussian Process Priors
+    '''
+    gp_prior_samples = gp.sample_y(X=X.reshape(-1, 1), n_samples=nb_samples)
+
+    fig = go.Figure()
+    for i in range(nb_samples):
+        scatter = go.Scatter(
+            x=X,
+            y=gp_prior_samples[:,i],
+            mode='lines',
+            name=f'sample_{i}',
+            opacity=.2,
+            marker=dict(color='gray'))
+        fig.add_trace(scatter)
+
+    # add real data
+    scatter = go.Scatter(x=X, y=y, mode='lines', name='original')
+    fig.add_trace(scatter)
+
+    # format figure
+    title = f'Gaussian Process Priors'
+    fig.update_layout(title=title)
+    return fig
+
+
+def plot_gp_ts(
+    X_train,
+    X_test,
+    y_train,
+    y_test,
+    y_train_pred,
+    y_test_pred,
+    y_std=None,
+    ):
+    '''
+    '''
+
+    # configure
+    blue_marker = dict(color='blue')
+    red_marker = dict(color='red')
+
+    # make figure
+    fig = go.Figure()
+
+    # add original data
+    Xs = np.append(X_train, X_test)
+    ys = np.append(y_train, y_test)
+    scatter = go.Scatter(x=Xs, y=ys, mode='lines', name='original', marker=blue_marker)
+    fig.add_trace(scatter)
+
+    # add prediction
+    ypreds = np.append(y_train_pred, y_test_pred)
+    scatter = go.Scatter(x=Xs, y=ypreds, mode='lines', name='prediction', marker=red_marker)
+    fig.add_trace(scatter)
+
+    # add confidence intervals
+    if y_std is None:
+        return fig
+
+    # training
+    y_upper = ys + 2*y_std
+    y_lower = ys - 2*y_std
+    scatter = go.Scatter(
+            x= np.append(Xs , Xs[::-1]), # x, then x reversed
+            y= np.append(y_upper, y_lower[::-1]), # upper, then lower reversed
+            fill='toself',
+            fillcolor='rgba(0,100,80,0.2)',
+            line=dict(color='rgba(255,255,255,0)'),
+            hoverinfo="skip",
+            showlegend=False
+        )
+    fig.add_trace(scatter)
+
+    # add vertical line
+    l_min, lmax = min(ys), max(ys)
+    shapes = [dict(
+        type= 'line', y0=l_min, y1=lmax, xref='x', x0=X_test[0], x1=X_test[0])]
+    fig.update_layout(shapes=shapes)
+
+    return fig
